@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wisent — Free streaming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+
+<nav id="mainNav">
+  <div class="nav-inner">
+    <div class="logo"><div class="logo-mark"></div>Wisent</div>
+    <div class="nav-links">
+      <a class="tablink active" data-type="all"><strong>Home</strong></a>
+      <a class="tablink" data-type="movie"><strong>Movies</strong></a>
+      <a class="tablink" data-type="tv"><strong>TV Series</strong></a>
+    </div>
+    <div class="nav-search">
+      <span class="sico">⌕</span>
+      <input type="text" id="navSearchInput" placeholder="Search movies, TV series, genres..." autocomplete="off">
+    </div>
+    <div class="nav-cta">
+      <a href="#" class="btn btn-ghost">Sign in</a>
+      <a href="#browse" class="btn btn-primary"><strong>Watch free</strong></a>
+    </div>
+  </div>
+</nav>
+
+<div class="search-overlay" id="searchOverlay">
+  <button class="search-close" id="searchClose">✕</button>
+  <div class="search-box">
+    <div class="big-input-wrap">
+      <span class="big-ico">⌕</span>
+      <input type="text" class="big-input" id="bigSearchInput" placeholder="Search by title — Ion Storm, Halcyon..." autocomplete="off">
+    </div>
+    <div class="genre-chips" id="genreChips"></div>
+    <div class="search-results" id="searchResults"></div>
+    <div class="search-empty" id="searchEmpty" style="display:none;">No titles match your search. Try a different name or genre.</div>
+  </div>
+</div>
+
+<div class="player-modal" id="playerModal">
+  <div class="player-panel">
+    <div class="pp-media" id="ppMedia"></div>
+    <div class="pp-body">
+      <h3 id="ppTitle">Title</h3>
+      <div class="pp-meta" id="ppMeta">Genre · Year</div>
+      <div class="pp-loading" id="ppLoading">Looking up where to watch…</div>
+      <div class="pp-providers" id="ppProviders"></div>
+      <div class="pp-attribution" id="ppAttribution" style="display:none;">Streaming data provided by <a href="https://www.justwatch.com/" target="_blank" rel="noopener">JustWatch</a></div>
+      <button class="pp-close" id="ppClose">Close</button>
+    </div>
+  </div>
+</div>
+
+<section class="hero" id="heroSection">
+  <div class="hero-skeleton" id="heroSkeleton">Loading featured title…</div>
+  <div class="hero-content" id="heroContent">
+    <div class="hero-badges" id="heroBadges"></div>
+    <h1 id="heroTitle"></h1>
+    <p class="overview" id="heroOverview"></p>
+    <div class="hero-ctas">
+      <button class="btn btn-white" id="heroPlay">▶</button>
+      <button class="btn btn-dark" id="heroInfo">ⓘ See More</button>
+    </div>
+    <div class="hero-dots" id="heroDots"></div>
+  </div>
+</section>
+
+<div class="data-banner" id="dataBanner">
+  ⚠ Showing sample data — add a free TMDB API key in the code (<code>TMDB_API_KEY</code> near the top of the script) to load real movies and TV shows.
+</div>
+
+<div class="wrap" id="browse">
+
+  <section class="section">
+    <div class="section-head"><h2>Watching</h2></div>
+    <div class="row-wrap">
+      <button class="row-arrow left" data-target="row-watching">‹</button>
+      <div class="row-scroll" id="row-watching"><div class="row-loading">Nothing here yet.</div></div>
+      <button class="row-arrow right" data-target="row-watching">›</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Top 10 Today</h2></div>
+    <div class="row-wrap">
+      <button class="row-arrow left" data-target="row-top10">‹</button>
+      <div class="row-scroll" id="row-top10"><div class="row-loading">Loading…</div></div>
+      <button class="row-arrow right" data-target="row-top10">›</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Trending Today</h2>
+      <div class="row-toggle" data-row="trending">
+        <button class="active" data-type="all">All</button>
+        <button data-type="movie">Movies</button>
+        <button data-type="tv">Series</button>
+      </div>
+    </div>
+    <div class="row-wrap">
+      <button class="row-arrow left" data-target="row-trending">‹</button>
+      <div class="row-scroll" id="row-trending"><div class="row-loading">Loading…</div></div>
+      <button class="row-arrow right" data-target="row-trending">›</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>New This Week</h2>
+      <div class="row-toggle" data-row="newweek">
+        <button class="active" data-type="all">All</button>
+        <button data-type="movie">Movies</button>
+        <button data-type="tv">Series</button>
+      </div>
+    </div>
+    <div class="row-wrap">
+      <button class="row-arrow left" data-target="row-newweek">‹</button>
+      <div class="row-scroll" id="row-newweek"><div class="row-loading">Loading…</div></div>
+      <button class="row-arrow right" data-target="row-newweek">›</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Top Rated</h2>
+      <div class="row-toggle" data-row="toprated">
+        <button class="active" data-type="movie">Movies</button>
+        <button data-type="tv">Series</button>
+      </div>
+    </div>
+    <div class="row-wrap">
+      <button class="row-arrow left" data-target="row-toprated">‹</button>
+      <div class="row-scroll" id="row-toprated"><div class="row-loading">Loading…</div></div>
+      <button class="row-arrow right" data-target="row-toprated">›</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2 id="genreRowTitle">Comedy</h2>
+      <select class="genre-select" id="genreSelect"></select>
+    </div>
+    <div class="row-wrap">
+      <button class="row-arrow left" data-target="row-genre">‹</button>
+      <div class="row-scroll" id="row-genre"><div class="row-loading">Loading…</div></div>
+      <button class="row-arrow right" data-target="row-genre">›</button>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="logo"><div class="logo-mark"></div>Wisent</div>
+    <div class="foot-brand">
+      <p>Wisent doesn't host or store any video files. Titles link to real streaming, rental, and purchase providers via TMDB and JustWatch, so you always land on a legitimate source.</p>
+    </div>
+    <div class="foot-bottom">© 2026 Wisent Streaming Inc. · DO NOT contact@wisent.stream</div>
+  </div>
+</footer>
+
+<script type="module" src="/src/main.js"></script>
+
+</body>
+</html>
